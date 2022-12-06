@@ -66,6 +66,8 @@
   padding: 12px;
   margin-bottom: 12px;
   width: 320px;
+  max-height: 320px;
+  overflow: scroll;
 }
 
 .text {
