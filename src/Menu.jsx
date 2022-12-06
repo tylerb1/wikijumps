@@ -69,9 +69,9 @@ export const Menu = ({
                 </IconContext.Provider>
               </div>
               <p className="text history">Article history:</p>
-              {articleHistory.map((a) => {
+              {articleHistory.map((a, index) => {
                 return (
-                  <p className='history-card' key={a}>{a.replaceAll("_", " ")}</p>
+                  <p className='history-card' key={`${a}-${index}`}>{a.replaceAll("_", " ")}</p>
                 );
               })}
             </>

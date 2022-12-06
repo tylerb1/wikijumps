@@ -20,8 +20,8 @@
 
 .menu {
   position: absolute;
-  top: 3%;
-  right: 2%;
+  top: 8px;
+  right: 4px;
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -30,8 +30,8 @@
 
 .close-icon-container {
   position: absolute;
-  top: 3%;
-  right: 1%;
+  top: 4px;
+  right: 4px;
   cursor: pointer;
 }
 
