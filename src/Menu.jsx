@@ -128,7 +128,7 @@ export const Menu = ({
                 Two articles being connected means<br />
                 people frequently go from one to the<br />
                 other when browsing Wikipedia (and the<br />
-                moving particles tell you which direction).<br />
+                moving particles tell you the direction).<br />
                 This data comes from&nbsp;
                 <a 
                   href='https://wikinav.toolforge.org/' 

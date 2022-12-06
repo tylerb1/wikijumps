@@ -31,6 +31,10 @@ export const ArticleSearch = ({ updateArticle, chosenArticleTitle }) => {
               width: '180px',
               marginRight: '16px',
               fontFamily: 'Georgia'
+            }),
+            option: (baseStyles) => ({
+              ...baseStyles,
+              fontFamily: 'Georgia'
             })
           }}
       />
