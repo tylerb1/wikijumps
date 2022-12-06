@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useEffect, createRef } from 'react';
 import { FaWikipediaW, FaHistory, FaInfo } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
@@ -13,8 +13,25 @@ export const Menu = ({
   setOpenMenuSections, 
   updateArticle, 
   nextArticleData, 
-  articleHistory 
+  articleHistory,
 }) => {
+  const articleHistoryRef = createRef();
+
+  useEffect(() => {
+    if (
+      openMenuSections.includes(1) && 
+      articleHistory.length > 1 && 
+      articleHistoryRef.current
+    ) {
+      console.log(articleHistory.length);
+      console.log(articleHistoryRef.current);
+      setTimeout(() => articleHistoryRef.current.scrollIntoView({ behavior: "smooth" }), 1);
+    }
+  // Suppress warning about articleHistoryRef being a dependency; need to 
+  // update it but not track every change to it
+  // eslint-disable-next-line
+  }, [openMenuSections, articleHistory.length]);
+
   const openMenuSection = useCallback((index) => {
     if (!openMenuSections.includes(index)) {
       setOpenMenuSections([...openMenuSections, index]);
@@ -72,14 +89,17 @@ export const Menu = ({
                 </IconContext.Provider>
               </div>
               <p className="text history">Article history:</p>
-              <div className={`history-container ${
-                openMenuSections.includes(2) ? 'compact' : ''
-              }`}>
+              <div 
+                className={`history-container ${
+                  openMenuSections.includes(2) ? 'compact' : ''
+                }`}
+              >
                 {articleHistory.map((a, index) => {
                   return (
                     <p className='history-card' key={`${a}-${index}`}>{a.replaceAll("_", " ")}</p>
                   );
                 })}
+                <div ref={articleHistoryRef}></div>
               </div>
             </>
           : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>

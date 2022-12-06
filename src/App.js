@@ -58,7 +58,12 @@ function App() {
         setErrored(true);
         setLoading(false);
       });
-  }, [articleHistory, setArticleGraphData, setArticleHistory, setNextArticleData]);
+  }, [
+    articleHistory,
+    setArticleGraphData, 
+    setArticleHistory, 
+    setNextArticleData
+  ]);
 
   // Initialize with random article on first render
   useEffect(() => {
@@ -103,7 +108,7 @@ function App() {
         setOpenMenuSections={setOpenMenuSections}
         updateArticle={updateArticle} 
         nextArticleData={nextArticleData}
-        articleHistory ={articleHistory}
+        articleHistory={articleHistory}
       />
       <div className="graph-container">
         <ForceGraph3D
