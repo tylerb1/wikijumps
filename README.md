@@ -1,8 +1,10 @@
+<img width="444" alt="Screenshot 2022-12-06 at 10 57 46 AM" src="https://user-images.githubusercontent.com/16053305/206032613-ed67b49c-cb44-46df-b444-3a7b5777e0e5.png">
+
 ## What it is
 
 For any Wikipedia article, show a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
 
-More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from wikinav.toolforge.org.
+More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from [WikiNav](wikinav.toolforge.org).
 
 You can specify an article, have a random(ish) article picked, or 
 
@@ -31,19 +33,18 @@ Pull the code, cd into its folder, run npm install, run rpm start
 
 ### General
 - Add ability to save browsing history long-term
-- Improve the “randomness” of articles (currently uses Vital Articles as starting point so that many connections will be guaranteed, but this can be tweaked)
+- Improve the “randomness” of articles (currently uses [Vital Articles](https://en.wikipedia.org/wiki/Wikipedia:Vital_articles) as starting point so that many connections will be guaranteed; this can be changed)
 - Add game mode, e.g. players have to fill in missing node labels or find path from article A to article B
 - Add real-time functionality, e.g. user chat, collaboration
 - Accessibility & internationalization
-- Expose API/npm library
-- Unit tests
+- Expose an API/npm library
 
 ### Data Science 
 - Automatic pathfinding from article A to B based on semantic similarity between articles
 
 ## Acknowledgements
 
-Huge thanks go to:
+Huge thanks to:
 - Wikipedia
 - Wikinav
 - React
@@ -57,3 +58,5 @@ Huge thanks go to:
 - react-select
 - react-icons
 - react-spinners
+
+If you like this project, feel free to donate on my [Ko-fi page](https://ko-fi.com/tylerb1).
