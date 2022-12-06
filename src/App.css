@@ -1,21 +1,10 @@
-.control-button {
-  text-decoration: none;
-  color: #c9d1d9;
-  background-color: #30363d;
-  border: 2px #8b949e solid;
-  border-radius: 8px;
-  padding: 8px;
-  font-family: 'Georgia';
-  font-weight: 400;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.go-to-article-container {
+.button-row {
   display: flex;
   flex-direction: row;
-  margin-bottom: 12px;
-  align-items: center;
+}
+
+.graph-container {
+  display: flex;
 }
 
 .menu {
@@ -26,22 +15,6 @@
   flex-direction: column;
   z-index: 200;
   align-items: flex-end;
-}
-
-.close-icon-container {
-  position: absolute;
-  top: 4px;
-  right: 2px;
-  cursor: pointer;
-}
-
-.button-row {
-  display: flex;
-  flex-direction: row;
-}
-
-.graph-container {
-  display: flex;
 }
 
 .menu-section {
@@ -65,7 +38,35 @@
   background-color: #161b22;
   padding: 12px;
   margin-bottom: 12px;
-  width: 320px;
+  max-width: 320px;
+  min-width: 120px;
+}
+
+.close-icon-container {
+  position: absolute;
+  top: 4px;
+  right: 2px;
+  cursor: pointer;
+}
+
+.go-to-article-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.control-button {
+  text-decoration: none;
+  color: #c9d1d9;
+  background-color: #30363d;
+  border: 2px #8b949e solid;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'Georgia';
+  font-weight: 400;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .history-container {
@@ -75,20 +76,6 @@
 
 .compact {
   max-height: 120px;
-}
-
-.text {
-  color: #c9d1d9;
-  font-family: 'Georgia';
-  font-size: 14px;
-  margin-right: 12px;
-  margin-top: 0;
-  margin-bottom: 0;
-  align-self: 'center';
-}
-
-.history {
-  margin-bottom: 8px;
 }
 
 .history-card {
@@ -126,4 +113,18 @@
   border: 2px #8b949e solid;
   border-radius: 8px;
   max-width: 300px;
+}
+
+.text {
+  color: #c9d1d9;
+  font-family: 'Georgia';
+  font-size: 14px;
+  margin-right: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: 'center';
+}
+
+.history {
+  margin-bottom: 8px;
 }

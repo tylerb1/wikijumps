@@ -129,7 +129,7 @@ export const Menu = ({
                 people frequently go from one to the<br />
                 other when browsing Wikipedia (and the<br />
                 moving particles tell you which direction).<br />
-                This data comes from 
+                This data comes from&nbsp;
                 <a 
                   href='https://wikinav.toolforge.org/' 
                   target='_blank' 

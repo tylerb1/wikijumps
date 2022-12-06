@@ -28,7 +28,8 @@ export const ArticleSearch = ({ updateArticle, chosenArticleTitle }) => {
           styles={{
             control: (baseStyles) => ({
               ...baseStyles,
-              width: '200px',
+              width: '180px',
+              marginRight: '16px',
               fontFamily: 'Georgia'
             })
           }}
