@@ -93,9 +93,9 @@ function App() {
       {isErrored &&
         <div className="error-dialog">
           <p className="text">
-            Something went wrong when<br />
-            retrieving that data. Please<br />
-            pick a different article.</p>
+            Something went wrong when retrieving that data.
+            Please pick a different article.
+          </p>
         </div>
       }
       <Menu 
