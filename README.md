@@ -31,19 +31,18 @@ Pull the code, cd into its folder, run npm install, run rpm start
 
 ### General
 - Add ability to save browsing history long-term
-- Improve the “randomness” of articles (currently uses Vital Articles as starting point so that many connections will be guaranteed, but this can be tweaked)
+- Improve the “randomness” of articles (currently uses [Vital Articles](https://en.wikipedia.org/wiki/Wikipedia:Vital_articles) as starting point so that many connections will be guaranteed; this can be changed)
 - Add game mode, e.g. players have to fill in missing node labels or find path from article A to article B
 - Add real-time functionality, e.g. user chat, collaboration
 - Accessibility & internationalization
-- Expose API/npm library
-- Unit tests
+- Expose an API/npm library
 
 ### Data Science 
 - Automatic pathfinding from article A to B based on semantic similarity between articles
 
 ## Acknowledgements
 
-Huge thanks go to:
+Huge thanks to:
 - Wikipedia
 - Wikinav
 - React
