@@ -1,0 +1,119 @@
+.control-button {
+  text-decoration: none;
+  color: #c9d1d9;
+  background-color: #30363d;
+  border: 2px #8b949e solid;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: 'Georgia';
+  font-weight: 400;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.go-to-article-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.menu {
+  position: absolute;
+  top: 3%;
+  right: 2%;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+  align-items: flex-end;
+}
+
+.close-icon-container {
+  position: absolute;
+  top: 3%;
+  right: 1%;
+  cursor: pointer;
+}
+
+.button-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.graph-container {
+  display: flex;
+}
+
+.menu-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  border: 2px #8b949e solid;
+  background-color: #161b22;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.menu-section-is-open {
+  position: relative;
+  border-radius: 8px;
+  border: 2px #8b949e solid;
+  background-color: #161b22;
+  padding: 12px;
+  margin-bottom: 12px;
+  width: 320px;
+}
+
+.text {
+  color: #c9d1d9;
+  font-family: 'Georgia';
+  font-size: 16px;
+  margin-right: 12px;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: 'center';
+}
+
+.history {
+  margin-bottom: 12px;
+}
+
+.history-card {
+  color: #8b949e;
+  background-color: #30363d;
+  border: 1px rgba(240,246,252,0.1) solid;
+  font-family: 'Georgia';
+  font-weight: 400;
+  font-size: 16px;
+  border-width: 1px;
+  border-radius: 4px;
+  padding: 6px;
+  width: fit-content;
+  text-align: start;
+  margin: 8px 0px;
+}
+
+.loader-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.error-dialog {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
+  padding: 12px;
+  color: #c9d1d9;
+  background-color: #30363d;
+  border: 2px #8b949e solid;
+  border-radius: 8px;
+}
