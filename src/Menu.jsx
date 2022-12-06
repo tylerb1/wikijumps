@@ -134,9 +134,18 @@ export const Menu = ({
                   href='https://wikinav.toolforge.org/' 
                   target='_blank' 
                   rel="noreferrer"
-                  style={{ color: 'rgb(56,139,253)', textDecoration: 'none' }}>
+                  style={{ color: 'rgb(56,139,253)', textDecoration: 'none' }}
+                >
                   WikiNav
-                </a>.
+                </a>.<br /><br /> See the Wikijumps source code&nbsp;
+                <a
+                  href="https://github.com/tylerb1/wikjumps"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ color: 'rgb(56,139,253)', textDecoration: 'none' }}
+                >
+                  here.
+                </a>
               </p>
             </>
           : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
