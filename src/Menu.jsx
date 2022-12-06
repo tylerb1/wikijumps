@@ -58,7 +58,12 @@ export const Menu = ({
       </div>
 
       <div
-        className={'menu-section' + (openMenuSections.includes(1) ? '-is-open' : '')}
+        className={
+          `menu-section${
+            openMenuSections.includes(1) ? '-is-open' : ''
+          } ${
+            openMenuSections.includes(2) ? 'compact' : ''
+          }`}
         onClick={() => openMenuSection(1)}
       >
         {openMenuSections.includes(1)

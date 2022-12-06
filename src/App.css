@@ -21,7 +21,7 @@
 .menu {
   position: absolute;
   top: 8px;
-  right: 4px;
+  right: 16px;
   display: flex;
   flex-direction: column;
   z-index: 1;
@@ -65,9 +65,13 @@
   background-color: #161b22;
   padding: 12px;
   margin-bottom: 12px;
-  width: 320px;
   max-height: 320px;
+  width: 320px;
   overflow: scroll;
+}
+
+.compact {
+  max-height: 120px;
 }
 
 .text {
