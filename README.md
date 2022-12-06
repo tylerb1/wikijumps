@@ -1,3 +1,5 @@
+<img width="444" alt="Screenshot 2022-12-06 at 10 57 46 AM" src="https://user-images.githubusercontent.com/16053305/206032613-ed67b49c-cb44-46df-b444-3a7b5777e0e5.png">
+
 ## What it is
 
 For any Wikipedia article, show a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
