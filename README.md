@@ -2,7 +2,7 @@
 
 For any Wikipedia article, show a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
 
-More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from wikinav.toolforge.org.
+More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from [WikiNav](wikinav.toolforge.org).
 
 You can specify an article, have a random(ish) article picked, or 
 
@@ -56,3 +56,5 @@ Huge thanks to:
 - react-select
 - react-icons
 - react-spinners
+
+If you like this project, feel free to donate on my [Ko-fi page](https://ko-fi.com/tylerb1).
