@@ -6,7 +6,7 @@ import { ArticleSearch } from './ArticleSearch';
 
 const iconColor = '#c9d1d9';
 const menuIconSize = '0.75em';
-const closeIconSize = '1.25em';
+const closeIconSize = '1.4em';
 
 export const Menu = ({ 
   openMenuSections, 
@@ -61,8 +61,6 @@ export const Menu = ({
         className={
           `menu-section${
             openMenuSections.includes(1) ? '-is-open' : ''
-          } ${
-            openMenuSections.includes(2) ? 'compact' : ''
           }`}
         onClick={() => openMenuSection(1)}
       >
@@ -74,11 +72,15 @@ export const Menu = ({
                 </IconContext.Provider>
               </div>
               <p className="text history">Article history:</p>
-              {articleHistory.map((a, index) => {
-                return (
-                  <p className='history-card' key={`${a}-${index}`}>{a.replaceAll("_", " ")}</p>
-                );
-              })}
+              <div className={`history-container ${
+                openMenuSections.includes(2) ? 'compact' : ''
+              }`}>
+                {articleHistory.map((a, index) => {
+                  return (
+                    <p className='history-card' key={`${a}-${index}`}>{a.replaceAll("_", " ")}</p>
+                  );
+                })}
+              </div>
             </>
           : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
               <div><FaHistory /></div>

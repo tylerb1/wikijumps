@@ -20,8 +20,8 @@
 
 .menu {
   position: absolute;
-  top: 8px;
-  right: 16px;
+  top: 10px;
+  right: 12px;
   display: flex;
   flex-direction: column;
   z-index: 200;
@@ -31,7 +31,7 @@
 .close-icon-container {
   position: absolute;
   top: 4px;
-  right: 4px;
+  right: 2px;
   cursor: pointer;
 }
 
@@ -65,13 +65,16 @@
   background-color: #161b22;
   padding: 12px;
   margin-bottom: 12px;
-  max-height: 320px;
   width: 320px;
+}
+
+.history-container {
   overflow: scroll;
+  max-height: 320px;
 }
 
 .compact {
-  max-height: 120px;
+  max-height: 140px;
 }
 
 .text {
@@ -85,7 +88,7 @@
 }
 
 .history {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .history-card {
