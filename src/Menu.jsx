@@ -23,8 +23,6 @@ export const Menu = ({
       articleHistory.length > 1 && 
       articleHistoryRef.current
     ) {
-      console.log(articleHistory.length);
-      console.log(articleHistoryRef.current);
       setTimeout(() => articleHistoryRef.current.scrollIntoView({ behavior: "smooth" }), 1);
     }
   // Suppress warning about articleHistoryRef being a dependency; need to 
