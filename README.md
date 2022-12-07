@@ -2,7 +2,7 @@
 
 ## What it is
 
-For any Wikipedia article, show a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
+For any Wikipedia article, Wikijumps shows a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
 
 More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from [WikiNav](wikinav.toolforge.org).
 
