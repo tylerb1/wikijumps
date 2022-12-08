@@ -2,6 +2,8 @@
 
 [Live demo](wikijumps.com)
 
+If you like this project, consider donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
+
 ## What it is
 
 For any Wikipedia article, Wikijumps shows a 3D graph of that article’s most popular (frequently clicked) links to other articles, and some of their highly-related nearby neighbors. 
@@ -60,5 +62,3 @@ Huge thanks to:
 - react-select
 - react-icons
 - react-spinners
-
-If you like this project, feel free to donate on my [Ko-fi page](https://ko-fi.com/tylerb1).
