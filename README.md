@@ -2,7 +2,7 @@
 
 [Live demo](wikijumps.com)
 
-If you like this project, consider donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
+If you like this project, consider sponsoring the project and/or donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
 
 ## What it is
 
@@ -61,4 +61,3 @@ Huge thanks to:
 - async-retry
 - react-select
 - react-icons
-- react-spinners
