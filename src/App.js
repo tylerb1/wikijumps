@@ -3,7 +3,6 @@ import { forceLink, forceManyBody } from 'd3-force-3d';
 import SpriteText from 'three-spritetext';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
-import ClipLoader from "react-spinners/ClipLoader";
 import './App.css';
 import { Menu } from './Menu';
 import { pickNextArticle, buildArticleGraphData } from './articleData'
@@ -84,15 +83,9 @@ function App() {
 
   return (
     <div className="app">
-      {isLoading &&
+      {isLoading && 
         <div className="loader-container">
-          <ClipLoader
-            color={normalNodeTextColor}
-            loading={isLoading}
-            size={80}
-            aria-label="Loading Spinner"
-            data-testid="loader"
-          />
+          <div className="loader"></div>
         </div>
       }
       {isErrored &&

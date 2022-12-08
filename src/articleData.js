@@ -38,7 +38,7 @@ const fetchClickstreamRetry = async (articleName) => {
 const fetchClickstream = async (articleName) => {
   return await retry(
     async () => fetchClickstreamRetry(articleName),
-    { retries: 3 }
+    { retries: 2 }
   );
 }
 
