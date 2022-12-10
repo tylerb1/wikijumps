@@ -21,7 +21,10 @@ You can specify an article, have a random(ish) article picked, and view your rec
 
 ## How to run it locally
 
-Pull the code, cd into its folder, run npm install, run rpm start
+- Pull the code
+- `cd` into its folder
+- Run `npm install`
+- Run `npm start`
 
 ## Ideas for additions
 
