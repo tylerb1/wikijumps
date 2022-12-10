@@ -2,7 +2,7 @@
 
 [Live demo](wikijumps.com)
 
-If you like this project, consider sponsoring the project and/or donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
+If you like this project, consider sponsoring it and/or donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
 
 ## What it is
 
@@ -10,7 +10,7 @@ For any Wikipedia article, Wikijumps shows a 3D graph of that article’s most p
 
 More specifically, two articles being linked means that Wikipedia users frequently travel between them, in whichever direction(s) the little blue particles are going. Data for this comes from [WikiNav](wikinav.toolforge.org).
 
-You can specify an article, have a random(ish) article picked, or 
+You can specify an article, have a random(ish) article picked, and view your recent article-viewing history.
 
 ## How to use it
 
