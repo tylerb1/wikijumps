@@ -74,7 +74,6 @@ export const Menu = ({
                 <button
                   className="control-button"
                   onClick={() => {
-                    console.log(gameModeIsOn);
                     updateArticle('', false, gameModeIsOn);
                   }}
                 >
