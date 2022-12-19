@@ -40,7 +40,7 @@ You can specify an article, have a random(ish) article picked, and view your rec
 
 ### General
 - Add ability to save browsing history long-term
-- Improve the “randomness” of articles (currently uses [Vital Articles](https://en.wikipedia.org/wiki/Wikipedia:Vital_articles) as starting point so that many connections will be guaranteed; this can be changed)
+- Improve the “randomness” of articles (currently uses [Featured Articles](https://en.wikipedia.org/wiki/Wikipedia:Featured_articles) as starting point so that many connections will be guaranteed; this can be changed)
 - Add additional game modes, e.g. players have to find path from article A to article B
 - Add real-time functionality, e.g. user chat, collaboration
 - Accessibility & internationalization
