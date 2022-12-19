@@ -112,7 +112,6 @@ export const pickNextArticle = async (title) => {
         !l.data.page.includes('User') && 
         !l.data.page.includes('Wikipedia talk')
       );
-    console.log(links);
     // Pick random article on Vital Articles page to get links for
     const randomIndex = Math.floor(Math.random() * links.length);
     const randomArticleTitle = links[randomIndex].data.page.replaceAll(' ', '_');
