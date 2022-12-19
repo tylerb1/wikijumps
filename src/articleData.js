@@ -49,13 +49,14 @@ const checkForRedirects = async (title) => {
   return redirectTarget || title;
 };
 
-export const buildArticleGraphData = async (articleData) => {
+export const buildArticleGraphData = async (articleData, centerIsBlank, centerIsBlue) => {
   const titles = new Set();
   titles.add(articleData[0]);
   let links = [];
   let nodes = [{
     id: articleData[0],
-    name: articleData[0].replaceAll('_', ' ')
+    name: centerIsBlank ? '_______' : articleData[0].replaceAll('_', ' '),
+    color: centerIsBlue ? 'rgb(56,139,253)' : '',
   }];
   articleData[1].forEach((l) => {
     links.push({ source: l.title, target: articleData[0], color: linkColor });

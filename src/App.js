@@ -3,6 +3,7 @@ import { forceLink, forceManyBody } from 'd3-force-3d';
 import SpriteText from 'three-spritetext';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
+import Confetti from 'react-confetti';
 import './App.css';
 import { Menu } from './Menu';
 import { pickNextArticle, buildArticleGraphData } from './articleData'
@@ -22,16 +23,18 @@ function App() {
   const [articleHistory, setArticleHistory] = useState([]);
   const [articleGraphData, setArticleGraphData] = useState({ nodes: [], links: [] });
   const [openMenuSections, setOpenMenuSections] = useState([]);
+  const [gameModeIsOn, setGameMode] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [isErrored, setErrored] = useState(false);
+  const [guessIsCorrect, setGuessIsCorrect] = useState(false);
   const fg = createRef();
 
-  const updateArticle = useCallback((title, shouldContinueHistory) => {
+  const updateArticle = useCallback((title, shouldContinueHistory, centerIsBlank, centerIsBlue) => {
     const fetchArticle = async () => {
       return await pickNextArticle(title);
     }
     const fetchGraphData = async (graphData) => {
-      return await buildArticleGraphData(graphData);
+      return await buildArticleGraphData(graphData, centerIsBlank, centerIsBlue);
     }
     setErrored(false);
     setLoading(true);
@@ -40,8 +43,10 @@ function App() {
         setNextArticleData(articleData);
         if (shouldContinueHistory) {
           setArticleHistory([...articleHistory, articleData[0]]);
-        } else {
+        } else if (!centerIsBlank) {
           setArticleHistory([articleData[0]]);
+        } else {
+          setArticleHistory([]);
         }
         fetchGraphData(articleData)
           .then((builtGraphData) => {
@@ -64,6 +69,10 @@ function App() {
     setNextArticleData
   ]);
 
+  const updateGuess = useCallback((articleName) => {
+    setArticleHistory([...articleHistory, articleName]);
+  }, [articleHistory, setArticleHistory]);
+
   // Initialize with random article on first render
   useEffect(() => {
     if (!nextArticleData.length) {
@@ -81,6 +90,43 @@ function App() {
   // eslint-disable-next-line
   }, [articleGraphData]);
 
+  // Update article if toggling game mode
+  const toggleGameMode = useCallback((val) => {
+    if (val !== gameModeIsOn) {
+      setArticleHistory([]);
+      setGameMode(val);
+      updateArticle('', false, val);
+    }
+  }, [gameModeIsOn, setGameMode, updateArticle, setArticleHistory]);
+
+  useEffect(() => {
+    if (
+      articleHistory.length > 0 && 
+      nextArticleData.length > 0 &&
+      gameModeIsOn && 
+      articleHistory[articleHistory.length - 1] === nextArticleData[0]
+    ) {
+      setGuessIsCorrect(true)
+    } else {
+      setGuessIsCorrect(false)
+    }
+  }, [articleHistory, nextArticleData, gameModeIsOn]);
+
+  useEffect(() => {
+    const fetchGraphData = async (graphData) => {
+      return await buildArticleGraphData(graphData, false, true);
+    }
+    if (guessIsCorrect) {
+      fetchGraphData(nextArticleData)
+        .then((builtGraphData) => {
+          setArticleGraphData(builtGraphData);
+        })
+        .catch(() => {
+          setErrored(true);
+        });
+    }
+  }, [guessIsCorrect, nextArticleData]);
+
   return (
     <div className="app">
       {isLoading && 
@@ -96,12 +142,18 @@ function App() {
           </p>
         </div>
       }
+      {guessIsCorrect &&
+        <Confetti />
+      }
       <Menu 
         openMenuSections={openMenuSections} 
         setOpenMenuSections={setOpenMenuSections}
         updateArticle={updateArticle} 
         nextArticleData={nextArticleData}
         articleHistory={articleHistory}
+        setGameMode={toggleGameMode}
+        gameModeIsOn={gameModeIsOn}
+        updateGuess={updateGuess}
       />
       <div className="graph-container">
         <ForceGraph3D
@@ -120,15 +172,23 @@ function App() {
           linkDirectionalParticleResolution={12}
           linkColor={() => linkColor}
           onNodeClick={(node, _) => {
-            if (node.id !== nextArticleData[0]) {
-              updateArticle(node.id, true);
+            if (gameModeIsOn) {
+              if (node.id === nextArticleData[0]) {
+                setOpenMenuSections([...openMenuSections, 0]);
+              } else {
+                window.open(`${wikipediaBaseURL}${node.id}`, '_blank');
+              }
             } else {
-              window.open(`${wikipediaBaseURL}${nextArticleData[0]}`, '_blank');
+              if (node.id === nextArticleData[0]) {
+                window.open(`${wikipediaBaseURL}${nextArticleData[0]}`, '_blank');
+              } else {
+                updateArticle(node.id, true);
+              }
             }
           }}
           nodeThreeObject={node => {
             const textSprite = new SpriteText(`${node.name}`);
-            textSprite.color = node.id === nextArticleData[0] ? centerNodeTextColor : normalNodeTextColor;
+            textSprite.color = node.color || (node.id === nextArticleData[0] ? centerNodeTextColor : normalNodeTextColor);
             textSprite.backgroundColor = node.id === nextArticleData[0] ? centerNodeBackgroundColor : normalNodeBackgroundColor;
             textSprite.borderColor = node.id === nextArticleData[0] ? centerNodeBorderColor : normalNodeBorderColor;
             textSprite.fontFace = 'Georgia';

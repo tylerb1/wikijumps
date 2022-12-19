@@ -14,6 +14,9 @@ export const Menu = ({
   updateArticle, 
   nextArticleData, 
   articleHistory,
+  setGameMode,
+  gameModeIsOn,
+  updateGuess,
 }) => {
   const articleHistoryRef = createRef();
 
@@ -42,6 +45,10 @@ export const Menu = ({
     }
   }, [openMenuSections, setOpenMenuSections]);
 
+  const toggleGameMode = useCallback((e) => {
+    setGameMode(e.target.checked)
+  }, [setGameMode]);
+
   return (
     <div className="menu">
       <div
@@ -58,13 +65,21 @@ export const Menu = ({
               <ArticleSearch
                 updateArticle={updateArticle}
                 chosenArticleTitle={nextArticleData[0] || ''}
+                gameModeIsOn={gameModeIsOn}
+                updateGuess={updateGuess}
               />
-              <button
-                className="control-button"
-                onClick={() => updateArticle('')}
-              >
-                Random article
-              </button>
+              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <button
+                  className="control-button"
+                  onClick={() => updateArticle('', false, gameModeIsOn)}
+                >
+                  {gameModeIsOn ? 'New game' : 'Random article'}
+                </button>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                  <p className="text">Game mode:</p>
+                  <input className="toggle" type="checkbox" onChange={toggleGameMode}/>
+                </div>
+              </div>
             </>
           : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
               <div><FaWikipediaW /></div>
@@ -86,7 +101,7 @@ export const Menu = ({
                   <div><IoClose /></div>
                 </IconContext.Provider>
               </div>
-              <p className="text history">Article history:</p>
+              <p className="text history">{gameModeIsOn ? 'Guesses this round' : 'Article history'}</p>
               <div 
                 className={`history-container ${
                   openMenuSections.includes(2) ? 'compact' : ''
@@ -137,7 +152,7 @@ export const Menu = ({
                   style={{ color: 'rgb(56,139,253)', textDecoration: 'none' }}
                 >
                   WikiNav
-                </a>.<br /><br /> See the Wikijumps source code&nbsp;
+                </a>. In game<br />mode, you try to guess the center article.<br /><br /> See the Wikijumps source code&nbsp;
                 <a
                   href="https://github.com/tylerb1/wikjumps"
                   target="_blank"

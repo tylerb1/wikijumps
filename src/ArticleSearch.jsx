@@ -1,6 +1,11 @@
 import Select from 'react-select/async';
 
-export const ArticleSearch = ({ updateArticle, chosenArticleTitle }) => {
+export const ArticleSearch = ({ 
+  updateArticle, 
+  updateGuess, 
+  chosenArticleTitle, 
+  gameModeIsOn,
+}) => {
   const loadOptions = (value) => {
     const url = `https://en.wikipedia.org/w/api.php?action=query&list=prefixsearch&format=json&pssearch=${value}&origin=*`;
     return fetch(url)
@@ -10,14 +15,17 @@ export const ArticleSearch = ({ updateArticle, chosenArticleTitle }) => {
 
   return (
     <div className="go-to-article-container">
-      <p className="text">Go to article:</p>
+      <p className="text">{gameModeIsOn ? 'Guess article:' : 'Go to an article:'}</p>
       <Select
         cacheOptions
         value={{ title: chosenArticleTitle.replaceAll('_', ' ') || ' ' }}
         getOptionLabel={(option) => option.title}
         getOptionValue={(option) => option.title.replaceAll(' ', '_')}
         loadOptions={loadOptions}
-        onChange={(option) => updateArticle(option.title.replaceAll(' ', '_'))}
+        onChange={ gameModeIsOn 
+          ? (option) => updateGuess(option.title)
+          : (option) => updateArticle(option.title.replaceAll(' ', '_'))
+        }
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
@@ -29,12 +37,15 @@ export const ArticleSearch = ({ updateArticle, chosenArticleTitle }) => {
             control: (baseStyles) => ({
               ...baseStyles,
               width: '180px',
-              marginRight: '16px',
               fontFamily: 'Georgia'
             }),
             option: (baseStyles) => ({
               ...baseStyles,
               fontFamily: 'Georgia'
+            }),
+            singleValue: (baseStyles) => ({
+              ...baseStyles,
+              display: 'none'
             })
           }}
       />
