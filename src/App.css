@@ -172,7 +172,6 @@
   content: "on off";
   display: block;
   position: absolute;
-  z-index: 2;
   width: 28px;
   height: 28px;
   background: #fff;
