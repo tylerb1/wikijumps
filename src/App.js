@@ -29,7 +29,10 @@ function App() {
   const [guessIsCorrect, setGuessIsCorrect] = useState(false);
   const fg = createRef();
 
-  const updateArticle = useCallback((title, shouldContinueHistory, centerIsBlank, centerIsBlue) => {
+  const updateArticle = useCallback((title, shouldContinueHistory, centerIsBlank, centerIsBlue, isNewGame) => {
+    if (isNewGame) {
+      setGuessIsCorrect(false);
+    }
     const fetchArticle = async () => {
       return await pickNextArticle(title);
     }
@@ -129,7 +132,6 @@ function App() {
   }, [guessIsCorrect, nextArticleData, setArticleGraphData, setErrored]);
 
   const showAnswer = useCallback(() => {
-    setGuessIsCorrect(false);
     const fetchGraphData = async (graphData) => {
       return await buildArticleGraphData(graphData, false, true);
     }

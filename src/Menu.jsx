@@ -74,7 +74,7 @@ export const Menu = ({
                 <button
                   className="control-button"
                   onClick={() => {
-                    updateArticle('', false, gameModeIsOn);
+                    updateArticle('', false, gameModeIsOn, false, true);
                   }}
                 >
                   {gameModeIsOn ? 'New game' : 'Random article'}

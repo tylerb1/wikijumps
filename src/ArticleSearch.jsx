@@ -23,7 +23,7 @@ export const ArticleSearch = ({
         getOptionValue={(option) => option.title.replaceAll(' ', '_')}
         loadOptions={loadOptions}
         onChange={ gameModeIsOn 
-          ? (option) => updateGuess(option.title)
+          ? (option) => updateGuess(option.title.replaceAll(' ', '_'))
           : (option) => updateArticle(option.title.replaceAll(' ', '_'))
         }
         components={{
