@@ -35,11 +35,19 @@ const fetchClickstreamRetry = async (articleName) => {
   }
 };
 
-const fetchClickstream = async (articleName) => {
-  return await retry(
-    async () => fetchClickstreamRetry(articleName),
-    { retries: 2 }
-  );
+const fetchClickstream = async (articleName, isRandom) => {
+  try {
+    return await retry(
+      async () => fetchClickstreamRetry(articleName),
+      { retries: 1 }
+    );
+  } catch (e) {
+    if (isRandom) {
+      return await pickNextArticle();
+    } else {
+      throw Error(e.message);
+    }
+  }
 }
 
 const checkForRedirects = async (title) => {
@@ -115,13 +123,13 @@ export const pickNextArticle = async (title) => {
     // Pick random article on Vital Articles page to get links for
     const randomIndex = Math.floor(Math.random() * links.length);
     const randomArticleTitle = links[randomIndex].data.page.replaceAll(' ', '_');
-    const randomArticleLinks = await fetchClickstream(randomArticleTitle);
+    const randomArticleLinks = await fetchClickstream(randomArticleTitle, true);
     const allRandomArticleLinks = [...randomArticleLinks[1], ...randomArticleLinks[2]];
 
     // Pick random link from the chosen Vital Article so that the "random" 
     // article is a little more random
     const randIndex = Math.floor(Math.random() * allRandomArticleLinks.length);
     const randArticleTitle = allRandomArticleLinks[randIndex].title;
-    return await fetchClickstream(randArticleTitle);
+    return await fetchClickstream(randArticleTitle, true);
   }
 };
