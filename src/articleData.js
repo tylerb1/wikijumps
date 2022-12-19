@@ -102,14 +102,17 @@ export const pickNextArticle = async (title) => {
     const finalTitle = await checkForRedirects(title);
     return await fetchClickstream(finalTitle);
   } else {
-    let vitalArticles = await wtf.fetch('https://en.wikipedia.org/wiki/Wikipedia:Vital_articles/Level/2')
+    let vitalArticles = await wtf.fetch('https://en.wikipedia.org/wiki/Wikipedia:Featured_articles')
     const links = vitalArticles
       .links()
       .filter(l => 
         l.data.type === 'internal' && 
+        l.data.page !== '' &&
+        !l.data.page.includes('Special') &&
         !l.data.page.includes('User') && 
         !l.data.page.includes('Wikipedia talk')
       );
+    console.log(links);
     // Pick random article on Vital Articles page to get links for
     const randomIndex = Math.floor(Math.random() * links.length);
     const randomArticleTitle = links[randomIndex].data.page.replaceAll(' ', '_');
