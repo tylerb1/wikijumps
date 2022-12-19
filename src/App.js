@@ -71,7 +71,8 @@ function App() {
 
   const updateGuess = useCallback((articleName) => {
     setArticleHistory([...articleHistory, articleName]);
-  }, [articleHistory, setArticleHistory]);
+    setOpenMenuSections([...openMenuSections, 1]);
+  }, [articleHistory, setArticleHistory, openMenuSections, setOpenMenuSections]);
 
   // Initialize with random article on first render
   useEffect(() => {
@@ -125,7 +126,21 @@ function App() {
           setErrored(true);
         });
     }
-  }, [guessIsCorrect, nextArticleData]);
+  }, [guessIsCorrect, nextArticleData, setArticleGraphData, setErrored]);
+
+  const showAnswer = useCallback(() => {
+    setGuessIsCorrect(false);
+    const fetchGraphData = async (graphData) => {
+      return await buildArticleGraphData(graphData, false, true);
+    }
+    fetchGraphData(nextArticleData)
+      .then((builtGraphData) => {
+        setArticleGraphData(builtGraphData);
+      })
+      .catch(() => {
+        setErrored(true);
+      });
+  }, [nextArticleData, setArticleGraphData, setErrored]);
 
   return (
     <div className="app">
@@ -154,6 +169,8 @@ function App() {
         setGameMode={toggleGameMode}
         gameModeIsOn={gameModeIsOn}
         updateGuess={updateGuess}
+        showAnswer={showAnswer}
+        guessIsCorrect={guessIsCorrect}
       />
       <div className="graph-container">
         <ForceGraph3D

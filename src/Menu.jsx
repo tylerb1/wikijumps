@@ -17,6 +17,8 @@ export const Menu = ({
   setGameMode,
   gameModeIsOn,
   updateGuess,
+  showAnswer,
+  guessIsCorrect,
 }) => {
   const articleHistoryRef = createRef();
 
@@ -68,18 +70,31 @@ export const Menu = ({
                 gameModeIsOn={gameModeIsOn}
                 updateGuess={updateGuess}
               />
-              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: gameModeIsOn && !guessIsCorrect ? 12 : 0 }}>
                 <button
                   className="control-button"
-                  onClick={() => updateArticle('', false, gameModeIsOn)}
+                  onClick={() => {
+                    console.log(gameModeIsOn);
+                    updateArticle('', false, gameModeIsOn);
+                  }}
                 >
                   {gameModeIsOn ? 'New game' : 'Random article'}
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <p className="text">Game mode:</p>
-                  <input className="toggle" type="checkbox" onChange={toggleGameMode}/>
+                  <input className="toggle" type="checkbox" value={gameModeIsOn} onChange={toggleGameMode}/>
                 </div>
               </div>
+              {gameModeIsOn && !guessIsCorrect &&
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <button
+                    className="control-button"
+                    onClick={() => showAnswer()}
+                  >
+                    {'Show answer'}
+                  </button>
+                </div>
+              }
             </>
           : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
               <div><FaWikipediaW /></div>
