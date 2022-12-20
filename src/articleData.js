@@ -63,7 +63,9 @@ export const buildArticleGraphData = async (articleData, centerIsBlank, centerIs
   let links = [];
   let nodes = [{
     id: articleData[0],
-    name: centerIsBlank ? '_______' : articleData[0].replaceAll('_', ' '),
+    name: centerIsBlank 
+      ? articleData[0].replaceAll('_', ' ')[0] + '_______' 
+      : articleData[0].replaceAll('_', ' '),
     color: centerIsBlue ? 'rgb(56,139,253)' : '',
   }];
   articleData[1].forEach((l) => {
@@ -105,31 +107,71 @@ export const buildArticleGraphData = async (articleData, centerIsBlank, centerIs
   return { nodes, links };
 };
 
+const categories = [
+  "People",
+  "History",
+  "Geography",
+  "Arts",
+  "Philosophy_and_religion",
+  "Everyday_life",
+  "Society_and_social sciences",
+  "Biological_and_health_sciences",
+  "Physical_sciences",
+  "Technology",
+  "Mathematics"
+];
+const nsfwTerms = [
+  'sex',
+  'condom',
+  'erotic',
+  'foreplay',
+  'bdsm',
+  'incest',
+  'masturb',
+  'orgasm',
+  'orgy',
+  'promisc',
+  'prostitut',
+  'age of consent',
+  'virgin',
+  'porn',
+  'clitoris',
+  'ovary',
+  'penis',
+  'testicle',
+  'uterus',
+  'vagina',
+  'reproduction',
+  'chlamydia',
+  'gonorrhea',
+  'herpes',
+  'hiv/aids',
+  'syphilis',
+  'rape',
+];
+
 export const pickNextArticle = async (title) => {
   if (title) {
     const finalTitle = await checkForRedirects(title);
     return await fetchClickstream(finalTitle);
   } else {
-    let vitalArticles = await wtf.fetch('https://en.wikipedia.org/wiki/Wikipedia:Featured_articles')
-    const links = vitalArticles
-      .links()
-      .filter(l => 
-        l.data.type === 'internal' && 
-        l.data.page !== '' &&
-        !l.data.page.includes('Special') &&
-        !l.data.page.includes('User') && 
-        !l.data.page.includes('Wikipedia talk')
-      );
-    // Pick random article on Vital Articles page to get links for
-    const randomIndex = Math.floor(Math.random() * links.length);
-    const randomArticleTitle = links[randomIndex].data.page.replaceAll(' ', '_');
-    const randomArticleLinks = await fetchClickstream(randomArticleTitle, true);
-    const allRandomArticleLinks = [...randomArticleLinks[1], ...randomArticleLinks[2]];
-
-    // Pick random link from the chosen Vital Article so that the "random" 
-    // article is a little more random
-    const randIndex = Math.floor(Math.random() * allRandomArticleLinks.length);
-    const randArticleTitle = allRandomArticleLinks[randIndex].title;
-    return await fetchClickstream(randArticleTitle, true);
+    let allArticles = [];
+    await Promise.all(categories.map(async (category) => {
+      const url = 'https://en.wikipedia.org/wiki/Wikipedia:Vital_articles/Level/4/' + category;
+      const categoryPage = await wtf.fetch(url);
+      let links = categoryPage.links();
+      links = links.filter(l => {
+        return l.data.type === 'internal' && 
+          l.data.page !== '' &&
+          !nsfwTerms.some((term) => l.data.page.toLowerCase().includes(term)) &&
+          !l.data.page.includes('Special') &&
+          !l.data.page.includes('User') && 
+          !l.data.page.includes('Wikipedia talk');
+      });
+      allArticles = [...allArticles, ...links];
+    }));
+    const randomIndex = Math.floor(Math.random() * allArticles.length);
+    const randomArticleTitle = allArticles[randomIndex].data.page.replaceAll(' ', '_');
+    return await fetchClickstream(randomArticleTitle, true);
   }
 };

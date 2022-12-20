@@ -77,7 +77,7 @@ export const Menu = ({
                     updateArticle('', false, gameModeIsOn, false, true);
                   }}
                 >
-                  {gameModeIsOn ? 'New game' : 'Random article'}
+                  {gameModeIsOn ? 'New round' : 'Random article'}
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <p className="text">Game mode:</p>
