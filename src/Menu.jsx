@@ -12,13 +12,15 @@ export const Menu = ({
   openMenuSections, 
   setOpenMenuSections, 
   updateArticle, 
-  nextArticleData, 
+  currentArticleData, 
   articleHistory,
   setGameMode,
   gameModeIsOn,
   updateGuess,
   showAnswer,
   guessIsCorrect,
+  setShouldUpdateArticle,
+  pushToArticleHistory
 }) => {
   const articleHistoryRef = createRef();
 
@@ -66,15 +68,17 @@ export const Menu = ({
               </div>
               <ArticleSearch
                 updateArticle={updateArticle}
-                chosenArticleTitle={nextArticleData[0] || ''}
+                chosenArticleTitle={currentArticleData[0] || ''}
                 gameModeIsOn={gameModeIsOn}
                 updateGuess={updateGuess}
+                pushToArticleHistory={pushToArticleHistory}
               />
               <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: gameModeIsOn && !guessIsCorrect ? 12 : 0 }}>
                 <button
                   className="control-button"
                   onClick={() => {
-                    updateArticle('')
+                    pushToArticleHistory('');
+                    setShouldUpdateArticle(true)
                   }}
                 >
                   {gameModeIsOn ? 'New round' : 'Random article'}
