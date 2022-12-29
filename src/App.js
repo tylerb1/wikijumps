@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, createRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { forceLink, forceManyBody } from 'd3-force-3d';
 import SpriteText from 'three-spritetext';
 import ForceGraph3D from 'react-force-graph-3d';
@@ -23,37 +24,81 @@ function App() {
   const [articleHistory, setArticleHistory] = useState([]);
   const [articleGraphData, setArticleGraphData] = useState({ nodes: [], links: [] });
   const [openMenuSections, setOpenMenuSections] = useState([]);
+
   const [gameModeIsOn, setGameMode] = useState(false);
+  const [guessIsCorrect, setGuessIsCorrect] = useState(false);
+
+  const [isSettingNewCenter, setIsSettingNewCenter] = useState(false);
+  const [latestGuess, setLatestGuess] = useState('');
+  const [needsToPushToArticleHistory, setNeedsToPushToArticleHistory] = useState(false);
+  const [shouldUpdateArticle, setShouldUpdateArticle] = useState(false);
+
   const [isLoading, setLoading] = useState(false);
   const [isErrored, setErrored] = useState(false);
-  const [guessIsCorrect, setGuessIsCorrect] = useState(false);
-  const fg = createRef();
 
-  const updateArticle = useCallback((title, shouldContinueHistory, centerIsBlank, centerIsBlue, isNewGame) => {
-    if (isNewGame) {
+  const fg = createRef();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // *** useCallback functions ***
+
+  const fetchArticle = async (title) => {
+    return await pickNextArticle(title);
+  }
+
+  useEffect(() => {
+    console.log('entering shouldupdateArticle hook');
+    if (shouldUpdateArticle) {
+      setShouldUpdateArticle(false);
+      setErrored(false);
+      setLoading(true);
+      fetchArticle()
+        .then((articleData) => {
+          console.log('navigating to article:', articleData[0]);
+          navigate(articleData[0]);
+        })
+        .catch(() => {
+          setErrored(true);
+          setLoading(false);
+        });
+    }
+  }, [shouldUpdateArticle, setErrored, setLoading, navigate]);
+
+  const updateArticle = useCallback((articleName) => {
+    if (articleName) {
+      navigate(articleName);
+    } else {
       setGuessIsCorrect(false);
+      setLatestGuess('');
+      setShouldUpdateArticle(true);
     }
-    const fetchArticle = async () => {
-      return await pickNextArticle(title);
+  }, [navigate, setGuessIsCorrect, setShouldUpdateArticle]);
+
+  const pushToArticleHistory = useCallback((articleTitle, shouldAdd) => {
+    if (!articleTitle) {
+      setArticleHistory([]);
+    } else if (shouldAdd) {
+      setArticleHistory([...articleHistory, articleTitle]);
+    } else {
+      setArticleHistory([articleTitle]);
     }
-    const fetchGraphData = async (graphData) => {
-      return await buildArticleGraphData(graphData, centerIsBlank, centerIsBlue);
+  }, [setArticleHistory, articleHistory]);
+
+  const getDataForNewArticle = useCallback((articleTitle) => {
+    const fetchGraphData = async (graphData, gameModeOn, guessCorrect) => {
+      console.log('Game mode on:', gameModeOn);
+      console.log('Guess is right:', guessCorrect)
+      return await buildArticleGraphData(graphData, gameModeOn, guessCorrect);
     }
-    setErrored(false);
-    setLoading(true);
-    fetchArticle()
+    fetchArticle(articleTitle)
       .then((articleData) => {
         setNextArticleData(articleData);
-        if (shouldContinueHistory) {
-          setArticleHistory([...articleHistory, articleData[0]]);
-        } else if (!centerIsBlank) {
-          setArticleHistory([articleData[0]]);
-        } else {
-          setArticleHistory([]);
-        }
-        fetchGraphData(articleData)
+        console.log(gameModeIsOn);
+        console.log('fetching graph data');
+        fetchGraphData(articleData, gameModeIsOn, guessIsCorrect)
           .then((builtGraphData) => {
             setArticleGraphData(builtGraphData);
+            setNeedsToPushToArticleHistory(true);
             setLoading(false);
           })
           .catch(() => {
@@ -66,24 +111,43 @@ function App() {
         setLoading(false);
       });
   }, [
-    articleHistory,
+    guessIsCorrect,
+    setNextArticleData,
+    gameModeIsOn,
     setArticleGraphData, 
-    setArticleHistory, 
-    setNextArticleData
+    setNeedsToPushToArticleHistory,
+    setLoading,
+    setErrored,
   ]);
 
   const updateGuess = useCallback((articleName) => {
-    setArticleHistory([...articleHistory, articleName]);
+    setLatestGuess(articleName);
+    setNeedsToPushToArticleHistory(true);
     setOpenMenuSections([...openMenuSections, 1]);
-  }, [articleHistory, setArticleHistory, openMenuSections, setOpenMenuSections]);
+  }, [setLatestGuess, setNeedsToPushToArticleHistory, openMenuSections, setOpenMenuSections]);
 
-  // Initialize with random article on first render
-  useEffect(() => {
-    if (!nextArticleData.length) {
-      updateArticle('');
+  const toggleGameMode = useCallback((val) => {
+    if (val !== gameModeIsOn) {
+      setGameMode(val);
     }
-  }, [nextArticleData, updateArticle]);
+  }, [gameModeIsOn, setGameMode]);
 
+  // *** useEffect ***
+
+  // Check for correct guesses
+  useEffect(() => {
+    if (
+      latestGuess !== '' &&
+      nextArticleData.length > 0 &&
+      latestGuess === nextArticleData[0]
+    ) {
+      setGuessIsCorrect(true)
+    } else {
+      setGuessIsCorrect(false)
+    }
+  }, [nextArticleData, latestGuess, setGuessIsCorrect]);
+
+  // Update graph linking properties
   useEffect(() => {
     if (fg.current) {
       fg.current.d3Force('charge', forceManyBody().strength(-100))
@@ -91,31 +155,53 @@ function App() {
     }
   // Suppress warning about fg (force graph reference) being a dependency; need to 
   // update it but not track every change to it
+  //
   // eslint-disable-next-line
   }, [articleGraphData]);
 
-  // Update article if toggling game mode
-  const toggleGameMode = useCallback((val) => {
-    if (val !== gameModeIsOn) {
-      setArticleHistory([]);
-      setGameMode(val);
-      updateArticle('', false, val);
-    }
-  }, [gameModeIsOn, setGameMode, updateArticle, setArticleHistory]);
-
+  // Update article history if necessary
   useEffect(() => {
-    if (
-      articleHistory.length > 0 && 
-      nextArticleData.length > 0 &&
-      gameModeIsOn && 
-      articleHistory[articleHistory.length - 1] === nextArticleData[0]
-    ) {
-      setGuessIsCorrect(true)
-    } else {
-      setGuessIsCorrect(false)
+    if (needsToPushToArticleHistory) {
+      setNeedsToPushToArticleHistory(false);
+      if (isSettingNewCenter || latestGuess !== '') {
+        setIsSettingNewCenter(false);
+        pushToArticleHistory(isSettingNewCenter ? nextArticleData[0] : latestGuess, true);
+      } else if (!gameModeIsOn) {
+        pushToArticleHistory(nextArticleData[0], false);
+      } else {
+        pushToArticleHistory('');
+      }
     }
-  }, [articleHistory, nextArticleData, gameModeIsOn]);
+  }, [
+    isSettingNewCenter,
+    setIsSettingNewCenter,
+    pushToArticleHistory,
+    needsToPushToArticleHistory,
+    setNeedsToPushToArticleHistory,
+    nextArticleData,
+    latestGuess,
+    gameModeIsOn
+  ])
 
+  // Retrieve article data at current URL hash path
+  useEffect(() => {
+    console.log('Pathname', location.pathname);
+    if (!location.pathname || location.pathname === '/') {
+      updateArticle('');
+    } else { 
+      getDataForNewArticle(location.pathname.slice(1));
+    }
+  }, [location.pathname, getDataForNewArticle, updateArticle]);
+
+  // Start with random article when game mode is toggled
+  useEffect(() => {
+    if (gameModeIsOn) { 
+      updateArticle('');
+    }
+  // eslint-disable-next-line
+  }, [gameModeIsOn]);
+                      
+  // Refetch graph data if guess is correct
   useEffect(() => {
     const fetchGraphData = async (graphData) => {
       return await buildArticleGraphData(graphData, false, true);
@@ -131,6 +217,7 @@ function App() {
     }
   }, [guessIsCorrect, nextArticleData, setArticleGraphData, setErrored]);
 
+  // Show correct answer
   const showAnswer = useCallback(() => {
     const fetchGraphData = async (graphData) => {
       return await buildArticleGraphData(graphData, false, true);
@@ -201,7 +288,8 @@ function App() {
               if (node.id === nextArticleData[0]) {
                 window.open(`${wikipediaBaseURL}${nextArticleData[0]}`, '_blank');
               } else {
-                updateArticle(node.id, true);
+                setIsSettingNewCenter(true);
+                updateArticle(node.id);
               }
             }
           }}
