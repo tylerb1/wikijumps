@@ -3,7 +3,6 @@ import { FaWikipediaW, FaHistory, FaInfo } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 import { ArticleSearch } from './ArticleSearch';
-import { useNavigate } from 'react-router-dom';
 
 const iconColor = '#c9d1d9';
 const menuIconSize = '0.75em';
@@ -14,17 +13,14 @@ export const Menu = ({
   setOpenMenuSections, 
   currentArticleName, 
   articleHistory,
-  setGameMode,
+  toggleGameMode,
   gameModeIsOn,
   updateGuess,
   showAnswer,
   guessIsCorrect,
-  pushToArticleHistory,
-  setCurrentArticleData,
-  setCurrentArticleName,
+  getRandomArticle,
 }) => {
   const articleHistoryRef = createRef();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -51,10 +47,6 @@ export const Menu = ({
     }
   }, [openMenuSections, setOpenMenuSections]);
 
-  const toggleGameMode = useCallback((e) => {
-    setGameMode(e.target.checked)
-  }, [setGameMode]);
-
   return (
     <div className="menu">
       <div
@@ -72,23 +64,19 @@ export const Menu = ({
                 chosenArticleTitle={currentArticleName || ''}
                 gameModeIsOn={gameModeIsOn}
                 updateGuess={updateGuess}
-                pushToArticleHistory={pushToArticleHistory}
               />
               <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: gameModeIsOn && !guessIsCorrect ? 12 : 0 }}>
                 <button
                   className="control-button"
                   onClick={() => {
-                    pushToArticleHistory('');
-                    setCurrentArticleData([]);
-                    setCurrentArticleName('');
-                    navigate('');
+                    getRandomArticle();
                   }}
                 >
                   {gameModeIsOn ? 'New round' : 'Random article'}
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <p className="text">Game mode:</p>
-                  <input className="toggle" type="checkbox" value={gameModeIsOn} onChange={toggleGameMode}/>
+                  <input className="toggle" type="checkbox" value={gameModeIsOn} onChange={(e) => toggleGameMode(e.target.checked)}/>
                 </div>
               </div>
               {gameModeIsOn && !guessIsCorrect &&
