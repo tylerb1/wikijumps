@@ -20,6 +20,7 @@ const normalNodeTextColor = '#8b949e';
 const normalNodeBorderColor = 'rgba(240,246,252,0.1)';
 
 function App() {
+  const [currentArticleName, setCurrentArticleName] = useState('');
   const [currentArticleData, setCurrentArticleData] = useState([]);
   const [articleHistory, setArticleHistory] = useState([]);
   const [articleGraphData, setArticleGraphData] = useState({ nodes: [], links: [] });
@@ -27,9 +28,7 @@ function App() {
 
   const [gameModeIsOn, setGameMode] = useState(false);
   const [guessIsCorrect, setGuessIsCorrect] = useState(false);
-
   const [latestGuess, setLatestGuess] = useState('');
-  const [shouldUpdateArticle, setShouldUpdateArticle] = useState(false);
 
   const [isLoading, setLoading] = useState(false);
   const [isErrored, setErrored] = useState(false);
@@ -44,61 +43,17 @@ function App() {
     return await pickNextArticle(title);
   }
 
-  const updateArticle = useCallback((articleName) => {
-    if (articleName) {
-      navigate(articleName);
-    } else {
-      setShouldUpdateArticle(true);
-    }
-  }, [navigate, setShouldUpdateArticle]);
-
-  const pushToArticleHistory = useCallback((articleTitle, shouldAdd) => {
+  const pushToArticleHistory = useCallback((articleTitle) => {
     if (!articleTitle) {
       setArticleHistory([]);
-    } else if (shouldAdd) {
-      setArticleHistory([...articleHistory, articleTitle]);
     } else {
-      setArticleHistory([articleTitle]);
+      setArticleHistory([...articleHistory, articleTitle]);
     }
   }, [setArticleHistory, articleHistory]);
 
-  const getDataForNewArticle = useCallback((articleTitle) => {
-    const fetchGraphData = async (graphData, gameModeOn, guessCorrect) => {
-      return await buildArticleGraphData(graphData, gameModeOn, guessCorrect);
-    }
-    fetchArticle(articleTitle)
-      .then((articleData) => {
-        setCurrentArticleData(articleData);
-        if (!gameModeIsOn) {
-          pushToArticleHistory(articleData[0], false);
-        }
-        fetchGraphData(articleData, gameModeIsOn, guessIsCorrect)
-          .then((builtGraphData) => {
-            setArticleGraphData(builtGraphData);
-            setLoading(false);
-          })
-          .catch(() => {
-            setErrored(true);
-            setLoading(false);
-          });
-      })
-      .catch(() => {
-        setErrored(true);
-        setLoading(false);
-      });
-  // eslint-disable-next-line
-  }, [
-    guessIsCorrect,
-    setCurrentArticleData,
-    gameModeIsOn,
-    setArticleGraphData, 
-    setLoading,
-    setErrored,
-  ]);
-
   const updateGuess = useCallback((articleName) => {
     setLatestGuess(articleName);
-    pushToArticleHistory(articleName, true);
+    pushToArticleHistory(articleName);
     setOpenMenuSections([...openMenuSections, 1]);
   // eslint-disable-next-line
   }, [setLatestGuess, openMenuSections, setOpenMenuSections]);
@@ -122,18 +77,109 @@ function App() {
       });
   }, [currentArticleData, setArticleGraphData, setErrored]);
 
-  // *** useEffect ***
-
-  // Check for correct guesses
-  useEffect(() => {
-    if (
-      latestGuess !== '' &&
-      currentArticleData.length > 0 &&
-      latestGuess === currentArticleData[0]
-    ) {
-      setGuessIsCorrect(true);
+  const setNewArticleData = useCallback((articleData) => {
+    const fetchGraphData = async (graphData, gameModeOn, guessCorrect) => {
+      return await buildArticleGraphData(graphData, gameModeOn, guessCorrect);
     }
-  }, [currentArticleData, latestGuess, setGuessIsCorrect]);
+    setCurrentArticleData(articleData);
+    fetchGraphData(articleData, gameModeIsOn, guessIsCorrect)
+      .then((builtGraphData) => {
+        setArticleGraphData(builtGraphData);
+        setLoading(false);
+      })
+      .catch(() => {
+        setErrored(true);
+        setLoading(false);
+      });
+  // eslint-disable-next-line
+  }, [
+    setCurrentArticleData,
+    gameModeIsOn,
+    guessIsCorrect,
+    setArticleGraphData,
+    setLoading,
+    setErrored,
+  ]);
+
+  // Fetch random article on page open or game mode toggle
+  const getRandomArticle = useCallback(() => {
+    setGuessIsCorrect(false);
+    setLatestGuess('');
+    setErrored(false);
+    setLoading(true);
+    fetchArticle()
+      .then((articleData) => {
+        if (gameModeIsOn) {
+          pushToArticleHistory('');
+          setCurrentArticleName(articleData[0]);
+          setNewArticleData(articleData);
+        } else {
+          // Show URL navigation in casual mode
+          pushToArticleHistory(articleData[0]);
+          navigate(articleData[0]);
+        }
+      })
+      .catch(() => {
+        setErrored(true);
+        setLoading(false);
+      });
+  // eslint-disable-next-line
+  }, [
+    setGuessIsCorrect,
+    setLatestGuess,
+    setErrored,
+    setLoading,
+    gameModeIsOn,
+    setNewArticleData,
+    navigate,
+  ]);
+
+  const getDataForNewArticle = useCallback((articleTitle) => {
+    fetchArticle(articleTitle)
+      .then((articleData) => {
+        setNewArticleData(articleData);
+      })
+      .catch(() => {
+        setErrored(true);
+        setLoading(false);
+      });
+  // eslint-disable-next-line
+  }, [
+    setNewArticleData,
+    setLoading,
+    setErrored,
+  ]);
+
+  // *** useEffect hooks ***
+
+  // Retrieve article data at current URL hash path
+  useEffect(() => {
+    if (!currentArticleName && location.pathname) {
+      if (location.pathname === '/') {
+        getRandomArticle();
+      } else {
+        console.log('setting path name as article name');
+        setCurrentArticleName(location.pathname.slice(1));
+      }
+    }
+  }, [location.pathname, currentArticleName, getRandomArticle, setCurrentArticleName]);
+
+  useEffect(() => {
+    if (currentArticleName) {
+      console.log('article name set, getting data');
+      getDataForNewArticle(currentArticleName);
+    }
+  }, [currentArticleName, getDataForNewArticle]);
+
+  // Fetch new article on game mode toggle
+  // useEffect(() => {
+  //   if (gameModeIsOn !== undefined && currentArticleName !== '') {
+  //     setCurrentArticleData([]);
+  //     setCurrentArticleName('');
+  //     navigate('');
+  //   }
+  // // eslint-disable-next-line
+  // }, [gameModeIsOn, currentArticleName, setCurrentArticleData, setCurrentArticleName]);
 
   // Update graph linking properties
   useEffect(() => {
@@ -147,14 +193,16 @@ function App() {
   // eslint-disable-next-line
   }, [articleGraphData]);
 
-  // Retrieve article data at current URL hash path
+  // Check for correct guesses
   useEffect(() => {
-    if (!location.pathname || location.pathname === '/') {
-      setShouldUpdateArticle(true);
-    } else { 
-      getDataForNewArticle(location.pathname.slice(1));
+    if (
+      latestGuess !== '' &&
+      currentArticleName !== '' &&
+      latestGuess === currentArticleName
+    ) {
+      setGuessIsCorrect(true);
     }
-  }, [location.pathname, getDataForNewArticle]);
+  }, [currentArticleName, latestGuess, setGuessIsCorrect]);
                       
   // Refetch graph data if guess is correct
   useEffect(() => {
@@ -171,39 +219,6 @@ function App() {
         });
     }
   }, [guessIsCorrect, currentArticleData, setArticleGraphData, setErrored]);
-
-  // Fetch random article if we need to
-  useEffect(() => {
-    if (shouldUpdateArticle === true) {
-      setShouldUpdateArticle(false);
-      setGuessIsCorrect(false);
-      setLatestGuess('');
-      setErrored(false);
-      setLoading(true);
-      fetchArticle()
-        .then((articleData) => {
-          if (!gameModeIsOn) {
-            pushToArticleHistory(articleData[0], false);
-          }
-          navigate(articleData[0]);
-        })
-        .catch(() => {
-          setErrored(true);
-          setLoading(false);
-        });
-    }
-  // eslint-disable-next-line
-  }, [
-    shouldUpdateArticle,
-    setShouldUpdateArticle,
-    currentArticleData,
-    gameModeIsOn,
-    setErrored,
-    setLoading,
-    navigate,
-    setGuessIsCorrect,
-    setLatestGuess
-  ]);
 
   return (
     <div className="app">
@@ -226,16 +241,16 @@ function App() {
       <Menu 
         openMenuSections={openMenuSections} 
         setOpenMenuSections={setOpenMenuSections}
-        updateArticle={updateArticle} 
-        currentArticleData={currentArticleData}
+        currentArticleName={currentArticleName}
         articleHistory={articleHistory}
         setGameMode={toggleGameMode}
         gameModeIsOn={gameModeIsOn}
         updateGuess={updateGuess}
         showAnswer={showAnswer}
         guessIsCorrect={guessIsCorrect}
-        setShouldUpdateArticle={setShouldUpdateArticle}
         pushToArticleHistory={pushToArticleHistory}
+        setCurrentArticleData={setCurrentArticleData}
+        setCurrentArticleName={setCurrentArticleName}
       />
       <div className="graph-container">
         <ForceGraph3D
@@ -255,28 +270,27 @@ function App() {
           linkColor={() => linkColor}
           onNodeClick={(node, _) => {
             if (gameModeIsOn) {
-              if (node.id === currentArticleData[0]) {
+              if (node.id === currentArticleName) {
                 setOpenMenuSections([...openMenuSections, 0]);
               } else {
                 window.open(`${wikipediaBaseURL}${node.id}`, '_blank');
               }
             } else {
-              if (node.id === currentArticleData[0]) {
-                window.open(`${wikipediaBaseURL}${currentArticleData[0]}`, '_blank');
+              if (node.id === currentArticleName) {
+                window.open(`${wikipediaBaseURL}${currentArticleName}`, '_blank');
               } else {
-                setShouldUpdateArticle(false);
-                pushToArticleHistory(node.id, true);
-                setErrored(false);
-                setLoading(true);
-                updateArticle(node.id);
+                pushToArticleHistory(node.id);
+                setCurrentArticleData([]);
+                setCurrentArticleName('');
+                navigate(node.id);
               }
             }
           }}
           nodeThreeObject={node => {
             const textSprite = new SpriteText(`${node.name}`);
-            textSprite.color = node.color || (node.id === currentArticleData[0] ? centerNodeTextColor : normalNodeTextColor);
-            textSprite.backgroundColor = node.id === currentArticleData[0] ? centerNodeBackgroundColor : normalNodeBackgroundColor;
-            textSprite.borderColor = node.id === currentArticleData[0] ? centerNodeBorderColor : normalNodeBorderColor;
+            textSprite.color = node.color || (node.id === currentArticleName ? centerNodeTextColor : normalNodeTextColor);
+            textSprite.backgroundColor = node.id === currentArticleName ? centerNodeBackgroundColor : normalNodeBackgroundColor;
+            textSprite.borderColor = node.id === currentArticleName ? centerNodeBorderColor : normalNodeBorderColor;
             textSprite.fontFace = 'Georgia';
             textSprite.fontWeight = '400';
             textSprite.textHeight = 6;

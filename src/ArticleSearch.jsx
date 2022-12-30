@@ -1,12 +1,14 @@
 import Select from 'react-select/async';
+import { useNavigate } from 'react-router-dom';
 
 export const ArticleSearch = ({ 
-  updateArticle, 
   updateGuess, 
   chosenArticleTitle, 
   gameModeIsOn,
   pushToArticleHistory,
 }) => {
+  const navigate = useNavigate();
+
   const loadOptions = (value) => {
     const url = `https://en.wikipedia.org/w/api.php?action=query&list=prefixsearch&format=json&pssearch=${value}&origin=*`;
     return fetch(url)
@@ -26,8 +28,8 @@ export const ArticleSearch = ({
         onChange={ gameModeIsOn 
           ? (option) => updateGuess(option.title.replaceAll(' ', '_'))
           : (option) => {
-            pushToArticleHistory(option.title.replaceAll(' ', '_'), false);
-            updateArticle(option.title.replaceAll(' ', '_'));
+            pushToArticleHistory(option.title.replaceAll(' ', '_'));
+            navigate(option.title.replaceAll(' ', '_'));
           }
         }
         components={{

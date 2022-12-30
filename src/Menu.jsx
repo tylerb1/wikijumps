@@ -3,6 +3,7 @@ import { FaWikipediaW, FaHistory, FaInfo } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 import { ArticleSearch } from './ArticleSearch';
+import { useNavigate } from 'react-router-dom';
 
 const iconColor = '#c9d1d9';
 const menuIconSize = '0.75em';
@@ -11,18 +12,19 @@ const closeIconSize = '1.4em';
 export const Menu = ({ 
   openMenuSections, 
   setOpenMenuSections, 
-  updateArticle, 
-  currentArticleData, 
+  currentArticleName, 
   articleHistory,
   setGameMode,
   gameModeIsOn,
   updateGuess,
   showAnswer,
   guessIsCorrect,
-  setShouldUpdateArticle,
-  pushToArticleHistory
+  pushToArticleHistory,
+  setCurrentArticleData,
+  setCurrentArticleName,
 }) => {
   const articleHistoryRef = createRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (
@@ -67,8 +69,7 @@ export const Menu = ({
                 </IconContext.Provider>
               </div>
               <ArticleSearch
-                updateArticle={updateArticle}
-                chosenArticleTitle={currentArticleData[0] || ''}
+                chosenArticleTitle={currentArticleName || ''}
                 gameModeIsOn={gameModeIsOn}
                 updateGuess={updateGuess}
                 pushToArticleHistory={pushToArticleHistory}
@@ -78,7 +79,9 @@ export const Menu = ({
                   className="control-button"
                   onClick={() => {
                     pushToArticleHistory('');
-                    setShouldUpdateArticle(true)
+                    setCurrentArticleData([]);
+                    setCurrentArticleName('');
+                    navigate('');
                   }}
                 >
                   {gameModeIsOn ? 'New round' : 'Random article'}
