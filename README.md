@@ -1,6 +1,6 @@
 <img width="444" alt="Screenshot 2022-12-06 at 10 57 46 AM" src="https://user-images.githubusercontent.com/16053305/206032613-ed67b49c-cb44-46df-b444-3a7b5777e0e5.png">
 
-[Live demo](wikijumps.com)
+[Live demo](https://www.wikijumps.com)
 
 If you like this project, consider sponsoring it and/or donating on my [Ko-fi page](https://ko-fi.com/tylerb1).
 
