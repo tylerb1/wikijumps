@@ -76,7 +76,7 @@ export const Menu = ({
                 </button>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                   <p className="text">Game mode:</p>
-                  <input className="toggle" type="checkbox" value={gameModeIsOn} onChange={(e) => toggleGameMode(e.target.checked)}/>
+                  <input className="toggle" type="checkbox" checked={gameModeIsOn} onChange={(e) => toggleGameMode(e.target.checked)}/>
                 </div>
               </div>
               {gameModeIsOn && !guessIsCorrect &&

@@ -157,7 +157,6 @@ function App() {
     if (currentArticleName) {
       if (!gameModeIsOn) {
         setArticleHistory([...articleHistory, currentArticleName]);
-        setOpenMenuSections([...openMenuSections, 1]);
       }
       getDataForNamedArticle(currentArticleName);
     }
