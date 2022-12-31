@@ -19,6 +19,7 @@ export const Menu = ({
   showAnswer,
   guessIsCorrect,
   getRandomArticle,
+  setArticleHistory,
 }) => {
   const articleHistoryRef = createRef();
 
@@ -64,6 +65,7 @@ export const Menu = ({
                 chosenArticleTitle={currentArticleName || ''}
                 gameModeIsOn={gameModeIsOn}
                 updateGuess={updateGuess}
+                setArticleHistory={setArticleHistory}
               />
               <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', marginBottom: gameModeIsOn && !guessIsCorrect ? 12 : 0 }}>
                 <button

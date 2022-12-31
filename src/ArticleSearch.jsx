@@ -5,6 +5,7 @@ export const ArticleSearch = ({
   updateGuess, 
   chosenArticleTitle, 
   gameModeIsOn,
+  setArticleHistory,
 }) => {
   const navigate = useNavigate();
 
@@ -26,7 +27,10 @@ export const ArticleSearch = ({
         loadOptions={loadOptions}
         onChange={ gameModeIsOn 
           ? (option) => updateGuess(option.title.replaceAll(' ', '_'))
-          : (option) => navigate(option.title.replaceAll(' ', '_'))
+          : (option) => {
+            setArticleHistory([]);
+            navigate(option.title.replaceAll(' ', '_'));
+          }
         }
         components={{
           DropdownIndicator: () => null,

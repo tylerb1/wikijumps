@@ -93,8 +93,8 @@ function App() {
         setErrored(true);
         setLoading(false);
       });
+  // eslint-disable-next-line
   }, [
-    setNamedArticleData,
     setLoading,
     setErrored,
   ]);
@@ -267,6 +267,7 @@ function App() {
         showAnswer={showAnswer}
         guessIsCorrect={guessIsCorrect}
         getRandomArticle={getRandomArticle}
+        setArticleHistory={setArticleHistory}
       />
       <div className="graph-container">
         <ForceGraph3D
