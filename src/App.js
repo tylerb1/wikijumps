@@ -43,19 +43,10 @@ function App() {
     return await pickNextArticle(title);
   }
 
-  const pushToArticleHistory = useCallback((articleTitle) => {
-    if (!articleTitle) {
-      setArticleHistory([]);
-    } else {
-      setArticleHistory([...articleHistory, articleTitle]);
-    }
-  }, [setArticleHistory, articleHistory]);
-
   const updateGuess = useCallback((articleName) => {
     setLatestGuess(articleName);
-    pushToArticleHistory(articleName);
     setOpenMenuSections([...openMenuSections, 1]);
-  }, [setLatestGuess, openMenuSections, setOpenMenuSections, pushToArticleHistory]);
+  }, [setLatestGuess, openMenuSections, setOpenMenuSections]);
 
   const showAnswer = useCallback(() => {
     const fetchGraphData = async (graphData) => {
@@ -68,19 +59,16 @@ function App() {
       .catch(() => {
         setErrored(true);
       });
-  }, [currentArticleData, setArticleGraphData, setErrored, pushToArticleHistory]);
+  }, [currentArticleData, setArticleGraphData, setErrored]);
 
   const setNamedArticleData = useCallback((articleData) => {
     const fetchGraphData = async (graphData, gameModeOn, guessCorrect) => {
       return await buildArticleGraphData(graphData, gameModeOn, guessCorrect);
     }
-    setCurrentArticleData(articleData);
     fetchGraphData(articleData, gameModeIsOn, guessIsCorrect)
       .then((builtGraphData) => {
         setArticleGraphData(builtGraphData);
-        if (!gameModeIsOn) {
-          pushToArticleHistory(articleData[0]);
-        }
+        setCurrentArticleData(articleData);
         setLoading(false);
       })
       .catch(() => {
@@ -111,66 +99,50 @@ function App() {
     setErrored,
   ]);
 
-  const handleNewArticleData = useCallback((articleData) => {
-    pushToArticleHistory('');
-    if (gameModeIsOn) {
-      setGuessIsCorrect(false);
-      setLatestGuess('');
-      setLoading(true);
-      setCurrentArticleName(articleData[0]);
-    } else {
-      navigate(articleData[0]);
-    }
-  }, [
-    gameModeIsOn,
-    setCurrentArticleName,
-  ]);
-
   const getRandomArticle = useCallback(() => {
+    setLoading(true);
+    setArticleHistory([]);
     fetchArticle()
       .then((articleData) => {
-        handleNewArticleData(articleData);
+        setGuessIsCorrect(false);
+        setLatestGuess('');
+        if (gameModeIsOn) {
+          setCurrentArticleName(articleData[0]);
+        } else {
+          navigate(articleData[0]);
+        }
       })
       .catch(() => {
         setErrored(true);
         setLoading(false);
       });
-  }, [handleNewArticleData, setErrored, setLoading])
-
-  const toggleGameMode = useCallback((val) => {
-    pushToArticleHistory('');
-    if (gameModeIsOn) {
-      setGuessIsCorrect(false);
-      setLatestGuess('');
-      setLoading(true);
-      getRandomArticle();
-    } else {
-      setCurrentArticleName('');
-      navigate('');
-    }
-    setGameMode(val);
+  // eslint-disable-next-line
   }, [
+    setArticleHistory,
     gameModeIsOn,
     setGuessIsCorrect,
     setLatestGuess,
+    setErrored,
     setLoading,
     setCurrentArticleName,
-    setGameMode,
   ]);
+
+  const toggleGameMode = useCallback((val) => {
+    setGameMode(val);
+  }, [setGameMode]);
 
   // *** useEffect hooks ***
 
   // Retrieve article name when landing on page
   useEffect(() => {
     setErrored(false);
+    setLoading(true);
     if (location.pathname === '/') {
-      setGuessIsCorrect(false);
-      setLatestGuess('');
-      setLoading(true);
       getRandomArticle();
     } else {
       setCurrentArticleName(location.pathname.slice(1));
     }
+  // eslint-disable-next-line
   }, [
     location.pathname,
     setCurrentArticleName,
@@ -183,9 +155,42 @@ function App() {
   // Fetch article data when new article name is available
   useEffect(() => {
     if (currentArticleName) {
+      if (!gameModeIsOn) {
+        setArticleHistory([...articleHistory, currentArticleName]);
+        setOpenMenuSections([...openMenuSections, 1]);
+      }
       getDataForNamedArticle(currentArticleName);
     }
-  }, [currentArticleName, getDataForNamedArticle]);
+  // eslint-disable-next-line
+  }, [currentArticleName]);
+
+  // Get new article when game mode toggled
+  useEffect(() => {
+    // Check to ensure toggle came from user, not initialization
+    if (currentArticleData.length) {
+      setCurrentArticleData([]);
+      if (gameModeIsOn) {
+        setCurrentArticleName('');
+        navigate('');
+      } else {
+        getRandomArticle();
+      }
+    }
+  // eslint-disable-next-line
+  }, [
+    setCurrentArticleData,
+    gameModeIsOn,
+    getRandomArticle,
+    setCurrentArticleName,
+  ]);
+
+  // Add to guesses list when guess submitted
+  useEffect(() => {
+    if (latestGuess && gameModeIsOn) {
+      setArticleHistory([...articleHistory, latestGuess]);
+    }
+  // eslint-disable-next-line
+  }, [latestGuess, gameModeIsOn]);
 
   // Update graph linking properties
   useEffect(() => {
@@ -193,9 +198,6 @@ function App() {
       fg.current.d3Force('charge', forceManyBody().strength(-100))
       fg.current.d3Force('link', forceLink().distance(80));
     }
-  // Suppress warning about fg (force graph reference) being a dependency; need to 
-  // update it but not track every change to it
-  //
   // eslint-disable-next-line
   }, [articleGraphData]);
 
@@ -208,6 +210,7 @@ function App() {
     ) {
       setGuessIsCorrect(true);
     }
+  // eslint-disable-next-line
   }, [
     currentArticleName,
     latestGuess,
@@ -219,7 +222,7 @@ function App() {
     const fetchGraphData = async (graphData) => {
       return await buildArticleGraphData(graphData, false, true);
     }
-    if (guessIsCorrect) {
+    if (guessIsCorrect && gameModeIsOn) {
       fetchGraphData(currentArticleData)
         .then((builtGraphData) => {
           setArticleGraphData(builtGraphData);
@@ -228,7 +231,13 @@ function App() {
           setErrored(true);
         });
     }
-  }, [guessIsCorrect, currentArticleData, setArticleGraphData, setErrored]);
+  // eslint-disable-next-line
+  }, [
+    guessIsCorrect,
+    currentArticleData,
+    setArticleGraphData,
+    setErrored,
+  ]);
 
   return (
     <div className="app">
