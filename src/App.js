@@ -95,6 +95,7 @@ function App() {
       });
   // eslint-disable-next-line
   }, [
+    setNamedArticleData,
     setLoading,
     setErrored,
   ]);
