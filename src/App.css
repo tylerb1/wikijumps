@@ -31,6 +31,36 @@
   cursor: pointer;
 }
 
+.preview-modal {
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  padding: 12px 28px 12px 12px;
+  width: 300px;
+  border: 2px #8b949e solid;
+  background-color: #23272c;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 999;
+  color: #c9d1d9;
+  opacity: 85%;
+}
+
+.image-preview {
+  width: 150px;
+  padding: 12px;
+  float: left;
+}
+
+.article-preview-link {
+  position: absolute;
+  bottom: 4px;
+  right: 2px;
+  cursor: pointer;
+}
+
 .menu-section-is-open {
   position: relative;
   border-radius: 8px;

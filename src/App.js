@@ -4,10 +4,17 @@ import { forceLink, forceManyBody } from 'd3-force-3d';
 import SpriteText from 'three-spritetext';
 import ForceGraph3D from 'react-force-graph-3d';
 import * as THREE from 'three';
+import { IoClose } from 'react-icons/io5';
+import { HiOutlineExternalLink } from 'react-icons/hi';
+import { IconContext } from 'react-icons';
 import Confetti from 'react-confetti';
 import './App.css';
 import { Menu } from './Menu';
-import { pickNextArticle, buildArticleGraphData } from './articleData'
+import { 
+  getArticlePreview,
+  pickNextArticle,
+  buildArticleGraphData,
+} from './articleData'
 
 const wikipediaBaseURL = 'https://en.wikipedia.org/wiki/';
 const graphBackgroundColor = '#0d1117';
@@ -18,6 +25,8 @@ const centerNodeBackgroundColor = '#30363d';
 const normalNodeBackgroundColor = '#161b22';
 const normalNodeTextColor = '#8b949e';
 const normalNodeBorderColor = 'rgba(240,246,252,0.1)';
+const iconColor = '#c9d1d9';
+const closeIconSize = '1.4em';
 
 function App() {
   const [currentArticleName, setCurrentArticleName] = useState('');
@@ -25,6 +34,7 @@ function App() {
   const [articleHistory, setArticleHistory] = useState([]);
   const [articleGraphData, setArticleGraphData] = useState({ nodes: [], links: [] });
   const [openMenuSections, setOpenMenuSections] = useState([]);
+  const [articlePreview, setArticlePreview] = useState({});
 
   const [gameModeIsOn, setGameMode] = useState(false);
   const [guessIsCorrect, setGuessIsCorrect] = useState(false);
@@ -93,7 +103,6 @@ function App() {
         setErrored(true);
         setLoading(false);
       });
-  // eslint-disable-next-line
   }, [
     setNamedArticleData,
     setLoading,
@@ -103,6 +112,7 @@ function App() {
   const getRandomArticle = useCallback(() => {
     setLoading(true);
     setArticleHistory([]);
+    setArticlePreview({});
     fetchArticle()
       .then((articleData) => {
         setGuessIsCorrect(false);
@@ -257,6 +267,33 @@ function App() {
       {guessIsCorrect &&
         <Confetti />
       }
+      {articlePreview.text &&
+        <div className="preview-modal">
+          <div 
+            className="close-icon-container" 
+            onClick={() => setArticlePreview({})}>
+            <IconContext.Provider value={{ color: iconColor, size: closeIconSize }}>
+              <div><IoClose /></div>
+            </IconContext.Provider>
+          </div>
+          <img 
+            className="image-preview" 
+            src={articlePreview.image}
+            alt={`Wikipedia thumbnail for ${articlePreview.name}`}
+          />
+          <p style={{ margin: 0, fontSize: 14 }}>
+            {articlePreview.text}
+          </p>
+          <div 
+            className="article-preview-link" 
+            onClick={() => window.open(`${wikipediaBaseURL}${articlePreview.name}`, '_blank')}
+          >
+            <IconContext.Provider value={{ color: linkColor, size: closeIconSize }}>
+              <div><HiOutlineExternalLink /></div>
+            </IconContext.Provider>
+          </div>
+        </div>
+      }
       <Menu 
         openMenuSections={openMenuSections} 
         setOpenMenuSections={setOpenMenuSections}
@@ -291,11 +328,11 @@ function App() {
               if (node.id === currentArticleName) {
                 setOpenMenuSections([...openMenuSections, 0]);
               } else {
-                window.open(`${wikipediaBaseURL}${node.id}`, '_blank');
+                getArticlePreview(node.id, setArticlePreview);
               }
             } else {
               if (node.id === currentArticleName) {
-                window.open(`${wikipediaBaseURL}${currentArticleName}`, '_blank');
+                getArticlePreview(node.id, setArticlePreview);
               } else {
                 navigate(node.id);
               }

@@ -8,6 +8,16 @@ const nTopLinks = 12;
 const nClues = 5;
 const linkColor = 'rgb(56,139,253)';
 
+export const getArticlePreview = async (articleName, setArticlePreview) => {
+  const page = await wtf.fetch(articleName);
+  const image = page?.images()?.[0].thumbnail();
+  const text = page?.sentences()?.[0].text();
+  const name = articleName;
+  if (text) {
+    setArticlePreview({ name, image, text });
+  }
+};
+
 const getYearAndMonthForNMonthsAgo = (n) => {
   const monthNumber = DateTime.now().minus({ months: n }).month;
   const month = monthNumber > 9 ? monthNumber.toString() : `0${monthNumber.toString()}`
