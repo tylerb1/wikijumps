@@ -151,7 +151,7 @@ function App() {
     if (location.pathname === '/') {
       getRandomArticle();
     } else {
-      setCurrentArticleName(location.pathname.slice(1));
+      setCurrentArticleName(decodeURI(location.pathname).slice(1));
     }
   // eslint-disable-next-line
   }, [
