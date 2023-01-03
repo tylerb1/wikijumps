@@ -15,6 +15,18 @@
   flex-direction: column;
   z-index: 200;
   align-items: flex-end;
+  border: 2px #8b949e solid;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: rgba(240,246,252,0.2);
+}
+
+.menu-section:last-child {
+  margin-bottom: 0px;
+}
+
+.menu-section-is-open:last-child {
+  margin-bottom: 0px;
 }
 
 .menu-section {
@@ -27,7 +39,7 @@
   height: 24px;
   border: 2px #8b949e solid;
   background-color: #161b22;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   cursor: pointer;
 }
 
@@ -67,7 +79,7 @@
   border: 2px #8b949e solid;
   background-color: #161b22;
   padding: 12px 24px 12px 12px;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   max-width: 320px;
   min-width: 120px;
 }
