@@ -276,11 +276,13 @@ function App() {
               <div><IoClose /></div>
             </IconContext.Provider>
           </div>
-          <img 
-            className="image-preview" 
-            src={articlePreview.image}
-            alt={`Wikipedia thumbnail for ${articlePreview.name}`}
-          />
+          {articlePreview.image &&
+            <img 
+              className="image-preview" 
+              src={articlePreview.image}
+              alt={`Wikipedia thumbnail for ${articlePreview.name}`}
+            />
+          }
           <p style={{ margin: 0, fontSize: 14 }}>
             {articlePreview.text}
           </p>

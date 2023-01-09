@@ -10,8 +10,8 @@ const linkColor = 'rgb(56,139,253)';
 
 export const getArticlePreview = async (articleName, setArticlePreview) => {
   const page = await wtf.fetch(articleName);
-  const image = page?.images()?.[0].thumbnail();
-  const text = page?.sentences()?.[0].text();
+  const image = page?.images()?.[0]?.thumbnail();
+  const text = page?.sentences()?.[0]?.text();
   const name = articleName;
   if (text) {
     setArticlePreview({ name, image, text });
