@@ -29,7 +29,6 @@ You can specify an article, have a random(ish) article picked, and view your rec
 ## Ideas for additions
 
 ### UI + UX
-- Hover state (and/or article preview) over text labels
 - Make recent article history interactive, allow branching
 - Make labels “move out of the way” of links better, e.g. update position of labels on each animation frame in way that geometrically minimizes intersections with link paths
 - Represent strength of article connections with directional particles (e.g. width, speed)
