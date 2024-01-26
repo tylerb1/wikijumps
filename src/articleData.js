@@ -33,7 +33,7 @@ const filterClues = (clueResults) => {
 };
 
 const fetchClickstreamRetry = async (articleName) => {
-  const month = getYearAndMonthForNMonthsAgo(3);
+  const month = getYearAndMonthForNMonthsAgo(2);
   try {
     const sourceResponse = await axios.get(`${wikiNavBaseURL}${articleName}/sources/${month.year}-${month.month}?limit=${nTopLinks}`);
     const destResponse = await axios.get(`${wikiNavBaseURL}${articleName}/destinations/${month.year}-${month.month}?limit=${nTopLinks}`);
