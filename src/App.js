@@ -296,6 +296,15 @@ function App() {
           </div>
         </div>
       }
+      {currentArticleName && 
+        <iframe 
+          className="article-preview-iframe"
+          width={'30%'} 
+          height={'50%'} 
+          title={currentArticleName} 
+          src={`${wikipediaBaseURL}${currentArticleName}`}
+        />
+      }
       <Menu 
         openMenuSections={openMenuSections} 
         setOpenMenuSections={setOpenMenuSections}
