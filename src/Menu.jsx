@@ -1,11 +1,12 @@
 import { useCallback, useEffect, createRef } from 'react';
-import { FaWikipediaW, FaHistory, FaInfo } from 'react-icons/fa';
-import { IoClose } from 'react-icons/io5';
+import { FaWikipediaW } from 'react-icons/fa';
+import { VscHistory } from 'react-icons/vsc';
+import { BsInfo } from 'react-icons/bs';
+import { IoClose, IoShuffle } from 'react-icons/io5';
 import { IconContext } from 'react-icons';
 import { ArticleSearch } from './ArticleSearch';
 
 const iconColor = '#c9d1d9';
-const menuIconSize = '0.75em';
 const closeIconSize = '1.4em';
 
 export const Menu = ({ 
@@ -50,6 +51,12 @@ export const Menu = ({
 
   return (
     <div className="menu">
+        <div className="menu-section" onClick={() => getRandomArticle()}>
+          <IconContext.Provider value={{ color: iconColor, size: '1.4em' }}>
+            <div style={{ display: 'flex', justifyItems: 'center' }}><IoShuffle /></div>
+          </IconContext.Provider>
+        </div>
+
       <div
         className={'menu-section' + (openMenuSections.includes(0) ? '-is-open' : '')}
         onClick={() => openMenuSection(0)}
@@ -58,7 +65,7 @@ export const Menu = ({
           ? <>
               <div className="close-icon-container" onClick={() => closeMenuSection(0)}>
                 <IconContext.Provider value={{ color: iconColor, size: closeIconSize }}>
-                  <div><IoClose /></div>
+                  <div style={{ display: 'flex', justifyItems: 'center' }}><IoClose /></div>
                 </IconContext.Provider>
               </div>
               <ArticleSearch
@@ -92,8 +99,8 @@ export const Menu = ({
                 </div>
               }
             </>
-          : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
-              <div><FaWikipediaW /></div>
+          : <IconContext.Provider value={{ color: iconColor, size: '1.3em' }}>
+              <div style={{ display: 'flex', justifyItems: 'center' }}><FaWikipediaW /></div>
             </IconContext.Provider>
         }
       </div>
@@ -102,7 +109,7 @@ export const Menu = ({
         className={
           `menu-section${
             openMenuSections.includes(1) ? '-is-open' : ''
-          }`}
+          } article-history`}
         onClick={() => openMenuSection(1)}
       >
         {openMenuSections.includes(1)
@@ -126,8 +133,8 @@ export const Menu = ({
                 <div ref={articleHistoryRef}></div>
               </div>
             </>
-          : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
-              <div><FaHistory /></div>
+          : <IconContext.Provider value={{ color: iconColor, size: '1.25em' }}>
+              <div style={{ display: 'flex', justifyItems: 'center' }}><VscHistory /></div>
             </IconContext.Provider>
         }
       </div>
@@ -163,7 +170,7 @@ export const Menu = ({
                   style={{ color: 'rgb(56,139,253)', textDecoration: 'none' }}
                 >
                   WikiNav
-                </a>. In game<br />mode, you try to guess the center article.<br /><br /> See the Wikijumps source code&nbsp;
+                </a>. In game<br />mode, you try to guess the center article.<br /><br /> See & support the Wikijumps source code&nbsp;
                 <a
                   href="https://github.com/tylerb1/wikjumps"
                   target="_blank"
@@ -174,8 +181,8 @@ export const Menu = ({
                 </a>
               </p>
             </>
-          : <IconContext.Provider value={{ color: iconColor, size: menuIconSize }}>
-              <div><FaInfo /></div>
+          : <IconContext.Provider value={{ color: iconColor, size: '1.75em' }}>
+              <div style={{ display: 'flex', justifyItems: 'center' }}><BsInfo /></div>
             </IconContext.Provider>
         }
       </div>

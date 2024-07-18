@@ -296,7 +296,7 @@ function App() {
           </div>
         </div>
       }
-      {currentArticleName && 
+      {/* {currentArticleName && 
         <iframe 
           className="article-preview-iframe"
           width={'30%'} 
@@ -304,7 +304,7 @@ function App() {
           title={currentArticleName} 
           src={`${wikipediaBaseURL}${currentArticleName}`}
         />
-      }
+      } */}
       <Menu 
         openMenuSections={openMenuSections} 
         setOpenMenuSections={setOpenMenuSections}
